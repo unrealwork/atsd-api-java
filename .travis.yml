@@ -1,0 +1,21 @@
+language: java
+
+jdk:
+  - oraclejdk8
+services:
+  - docker
+cache:
+  directories:
+    - $HOME/.m2
+before_install:
+  - source scripts/.travis-functions.sh
+install:
+  - run_atsd_container
+  - show_atsd_version
+script:
+  - run_test
+after_success:
+  - coverage_report
+branches:
+  only:
+    - master

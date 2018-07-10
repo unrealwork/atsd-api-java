@@ -1,6 +1,10 @@
-[![CircleCI](https://circleci.com/gh/axibase/atsd-api-java.svg?style=svg)](https://circleci.com/gh/axibase/atsd-api-java) [![codebeat badge](https://codebeat.co/badges/0d0339b4-9155-4484-8dc6-9bfdf8cc4d09)](https://codebeat.co/projects/github-com-axibase-atsd-api-java) [![codecov](https://codecov.io/gh/axibase/atsd-api-java/branch/master/graph/badge.svg)](https://codecov.io/gh/axibase/atsd-api-java)  [![](https://maven-badges.herokuapp.com/maven-central/com.axibase/atsd-api-java/badge.svg)](https://mvnrepository.com/artifact/com.axibase/atsd-api-java/) 
-
 # Axibase Time Series Database Client for Java
+
+[![Travis](https://api.travis-ci.org/axibase/atsd-api-java.svg)](https://api.travis-ci.org/axibase/atsd-api-java.svg)
+[![Codebeat](https://codebeat.co/badges/0d0339b4-9155-4484-8dc6-9bfdf8cc4d09)](https://codebeat.co/projects/github-com-axibase-atsd-api-java)
+[![codecov](https://codecov.io/gh/axibase/atsd-api-java/branch/master/graph/badge.svg)](https://codecov.io/gh/axibase/atsd-api-java)
+[![Maven central](https://maven-badges.herokuapp.com/maven-central/com.axibase/atsd-api-java/badge.svg)](https://mvnrepository.com/artifact/com.axibase/atsd-api-java/)
+
 
 The **ATSD Client for Java** enables Java developers to build reporting, analytical, and alerting applications that read and write data and metadata from the
 [Axibase Time Series Database][atsd].
@@ -8,11 +12,11 @@ The **ATSD Client for Java** enables Java developers to build reporting, analyti
 Get started by importing the client with **Maven**:
 
 ```xml
-        <dependency>
-            <groupId>com.axibase</groupId>
-            <artifactId>atsd-api-java</artifactId>
-            <version>1.0.4</version>
-        </dependency>
+    <dependency>
+      <groupId>com.axibase</groupId>
+      <artifactId>atsd-api-java</artifactId>
+      <version>1.0.4</version>
+    </dependency>
 ```
 
 * [Documentation][atsd-api]
@@ -23,44 +27,44 @@ Get started by importing the client with **Maven**:
 The **ATSD Client for Java** provides an easy-to-use client for interfacing with **ATSD** metadata and data REST API services.
 It has the ability to read and write time series values, statistics, properties, alerts, and messages.
 
-- Data API
-    - Series
-        - QUERY
-        - INSERT
-        - CSV INSERT
-    - Properties
-        - QUERY
-        - INSERT
-    - Alerts
-        - QUERY
-    - Alerts History
-        - QUERY
+* Data API
+  * Series
+    * QUERY
+    * INSERT
+    * CSV INSERT
+  * Properties
+    * QUERY
+    * INSERT
+  * Alerts
+    * QUERY
+  * Alerts History
+    * QUERY
 
-- Metadata API
-    - Metrics
-        - Get Metrics
-        - Get Metric
-        - Create/Update Metric
-        - Delete Metric  
-        - Get Entities and Series Tags for Metric
-    - Entities
-        - Get Entities
-        - Get Entity
-        - Create/Update Entity
-        - Delete Entity
-        - Get Metrics for Entity
-    - Entity Groups
-        - Get Entity Groups
-        - Get Entity Group
-        - Create/Update Entity Group
-        - Delete Entity Group
-        - Entities for Entity Group
-        - Add Entities to Entity Group
-        - Set (Replace) Entities in Entity Group
-        - Delete Entities from Entity Group
-
+* Metadata API
+  * Metrics
+    * Get Metrics
+    * Get Metric
+    * Create/Update Metric
+    * Delete Metric  
+    * Get Entities and Series Tags for Metric
+  * Entities
+    * Get Entities
+    * Get Entity
+    * Create/Update Entity
+    * Delete Entity
+    * Get Metrics for Entity
+  * Entity Groups
+    * Get Entity Groups
+    * Get Entity Group
+    * Create/Update Entity Group
+    * Delete Entity Group
+    * Entities for Entity Group
+    * Add Entities to Entity Group
+    * Set (Replace) Entities in Entity Group
+    * Delete Entities from Entity Group
 
 ## Getting Started
+
 Before you begin installing the **ATSD Client for Java**, you need to install a copy of the [Axibase Time Series Database][atsd].
 Download the latest version of ATSD that is available for your Linux distribution.
 
@@ -69,7 +73,7 @@ Minimum requirements for running the ATSD Client: Java 1.7+.
 We recommend installing the ATSD Client for Java by using Maven. Build the ATSD Client with
 Maven after checking out the code from GitHub.
 
-```
+```sh
 git clone https://github.com/axibase/atsd-api-java.git
 cd atsd-api-java
 mvn clean dependency:copy-dependencies compile jar:jar
@@ -80,12 +84,14 @@ java -cp "atsd-api-java-1.0.4.jar:dependency/*" -Daxibase.tsd.api.client.propert
 ## Examples
 
 See:
+
 * [AtsdClientReadExample][atsd-read-example]
 * [AtsdClientWriteExample][atsd-write-example]
 
 ### Client Configuration
 
 #### Option 1
+
 Use `-Daxibase.tsd.api.client.properties=./client.properties`:
 
 ```java
@@ -98,26 +104,30 @@ Use `-Daxibase.tsd.api.client.properties=./client.properties`:
 ```
 
 **client.properties** example:
-```
-        axibase.tsd.api.server.name=atsd_server
-        axibase.tsd.api.server.port=8080
-        #axibase.tsd.api.server.port=8443
-        #axibase.tsd.api.protocol=https
-        #axibase.tsd.api.ssl.errors.ignore=true
-        axibase.tsd.api.username=username
-        axibase.tsd.api.password=pwd
+
+```properties
+    axibase.tsd.api.server.name=atsd_server
+    axibase.tsd.api.server.port=8080
+    #axibase.tsd.api.server.port=8443
+    #axibase.tsd.api.protocol=https
+    #axibase.tsd.api.ssl.errors.ignore=true
+    axibase.tsd.api.username=username
+    axibase.tsd.api.password=pwd
 ```
 
 Usage:
+
 ```java
-        AtsdClientWriteExample atsdClientWriteExample = new AtsdClientWriteExample();
-        atsdClientWriteExample.configure();
-        atsdClientWriteExample.writeData();
-        atsdClientWriteExample.printData();
+    AtsdClientWriteExample atsdClientWriteExample = new AtsdClientWriteExample();
+    atsdClientWriteExample.configure();
+    atsdClientWriteExample.writeData();
+    atsdClientWriteExample.printData();
 ```
 
 #### Option 2
+
 Use pure Java:
+
 ```java
         ClientConfigurationFactory configurationFactory = new ClientConfigurationFactory(
                 "http", "atsd_server", 8080, // serverPort
@@ -141,11 +151,12 @@ Use pure Java:
         httpClientManager.setObjectPoolConfig(objectPoolConfig);
         httpClientManager.setBorrowMaxWaitMillis(1000);
 
-        DataService dataService = new DataService(httpClientManager);
-        MetaDataService metaDataService = new MetaDataService(httpClientManager);
+    DataService dataService = new DataService(httpClientManager);
+    MetaDataService metaDataService = new MetaDataService(httpClientManager);
 ```
 
 Usage:
+
 ```java
         AtsdClientWriteExample atsdClientWriteExample = new AtsdClientWriteExample();
         atsdClientWriteExample.pureJavaConfigure();
@@ -153,10 +164,11 @@ Usage:
         atsdClientWriteExample.printData();
 ```
 
-
 #### Option 3
+
 Use Spring.
 See **example-beans.xml**:
+
 ```xml
         <bean id="example" class="com.axibase.tsd.example.AtsdClientWriteExample"/>
         <bean id="dataService" class="com.axibase.tsd.client.DataService"/>
@@ -175,6 +187,7 @@ See **example-beans.xml**:
 ```
 
 Usage:
+
 ```java
             ApplicationContext context =
                 new ClassPathXmlApplicationContext("example-beans.xml");
@@ -185,6 +198,7 @@ Usage:
 ```
 
 ### Metadata Processing
+
 ```java
         String metricExample = "jvm_memory_used_percent";
         Metric metric = metaDataService.retrieveMetric(metricExample);
@@ -209,6 +223,7 @@ Usage:
 ```
 
 ### Data Queries
+
 ```java
         GetSeriesQuery command = new GetSeriesQuery(entityName, metric.getName(), tags,
             System.currentTimeMillis() - 3600, System.currentTimeMillis());
