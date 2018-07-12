@@ -1,6 +1,6 @@
 # Axibase Time Series Database Client for Java
 
-[![Travis](https://api.travis-ci.org/axibase/atsd-api-java.svg)](https://api.travis-ci.org/axibase/atsd-api-java.svg)
+[![Travis](https://api.travis-ci.org/axibase/atsd-api-java.svg)](https://travis-ci.org/axibase/atsd-api-java)
 [![Codebeat](https://codebeat.co/badges/0d0339b4-9155-4484-8dc6-9bfdf8cc4d09)](https://codebeat.co/projects/github-com-axibase-atsd-api-java)
 [![codecov](https://codecov.io/gh/axibase/atsd-api-java/branch/master/graph/badge.svg)](https://codecov.io/gh/axibase/atsd-api-java)
 [![Maven central](https://maven-badges.herokuapp.com/maven-central/com.axibase/atsd-api-java/badge.svg)](https://mvnrepository.com/artifact/com.axibase/atsd-api-java/)
