@@ -24,6 +24,7 @@ import com.axibase.tsd.model.system.ServerError;
 import com.axibase.tsd.network.PlainCommand;
 import com.axibase.tsd.query.Query;
 import com.axibase.tsd.query.QueryPart;
+import com.axibase.tsd.util.AtsdUtil;
 
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
@@ -321,7 +322,7 @@ public class DataService {
         @Override
         public BatchResponse extract(Response response) {
             BatchResponse batchResponse = new BatchResponse(response.getStatusInfo());
-            if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+            if (AtsdUtil.hasStatusFamily(response, Response.Status.Family.SUCCESSFUL)) {
                 SendCommandResult sendCommandResult = response.readEntity(SendCommandResult.class);
                 batchResponse.setResult(sendCommandResult);
             } else {
