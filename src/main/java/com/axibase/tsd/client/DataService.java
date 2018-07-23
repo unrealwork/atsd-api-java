@@ -14,21 +14,8 @@
  */
 package com.axibase.tsd.client;
 
-import com.axibase.tsd.model.data.Alert;
-import com.axibase.tsd.model.data.AlertHistory;
-import com.axibase.tsd.model.data.Message;
-import com.axibase.tsd.model.data.Property;
-import com.axibase.tsd.model.data.TimeFormat;
-import com.axibase.tsd.model.data.command.AddSeriesCommand;
-import com.axibase.tsd.model.data.command.BatchAlertCommand;
-import com.axibase.tsd.model.data.command.BatchQuery;
-import com.axibase.tsd.model.data.command.BatchResponse;
-import com.axibase.tsd.model.data.command.GetAlertHistoryQuery;
-import com.axibase.tsd.model.data.command.GetAlertQuery;
-import com.axibase.tsd.model.data.command.GetMessagesQuery;
-import com.axibase.tsd.model.data.command.GetPropertiesQuery;
-import com.axibase.tsd.model.data.command.GetSeriesQuery;
-import com.axibase.tsd.model.data.command.SendCommandResult;
+import com.axibase.tsd.model.data.*;
+import com.axibase.tsd.model.data.command.*;
 import com.axibase.tsd.model.data.filters.DeletePropertyFilter;
 import com.axibase.tsd.model.data.series.Series;
 import com.axibase.tsd.model.data.series.aggregate.AggregateType;
@@ -37,23 +24,14 @@ import com.axibase.tsd.model.system.ServerError;
 import com.axibase.tsd.network.PlainCommand;
 import com.axibase.tsd.query.Query;
 import com.axibase.tsd.query.QueryPart;
-import org.apache.http.HttpStatus;
 
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.axibase.tsd.client.RequestProcessor.patch;
 import static com.axibase.tsd.client.RequestProcessor.post;
-import static com.axibase.tsd.util.AtsdUtil.check;
-import static com.axibase.tsd.util.AtsdUtil.checkEntityIsEmpty;
-import static com.axibase.tsd.util.AtsdUtil.checkMetricIsEmpty;
-import static com.axibase.tsd.util.AtsdUtil.checkPropertyTypeIsEmpty;
+import static com.axibase.tsd.util.AtsdUtil.*;
 
 /**
  * Provides high-level API to retrieve and update ATSD Data Objects (time-series, alerts, properties).
@@ -343,7 +321,7 @@ public class DataService {
         @Override
         public BatchResponse extract(Response response) {
             BatchResponse batchResponse = new BatchResponse(response.getStatusInfo());
-            if (response.getStatus() == HttpStatus.SC_OK) {
+            if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
                 SendCommandResult sendCommandResult = response.readEntity(SendCommandResult.class);
                 batchResponse.setResult(sendCommandResult);
             } else {

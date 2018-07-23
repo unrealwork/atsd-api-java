@@ -193,7 +193,7 @@ class HttpClient {
 
     private <T, E> List<T> requestList(String url, Class<T> resultClass, QueryPart<T> query, RequestProcessor<E> requestProcessor) {
         Response response = doRequest(url, query, requestProcessor);
-        if (response.getStatus() == HttpStatus.SC_OK) {
+        if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
             return response.readEntity(listType(resultClass));
         } else if (response.getStatus() == HttpStatus.SC_NOT_FOUND) {
             return Collections.emptyList();
@@ -204,7 +204,7 @@ class HttpClient {
 
     private <T, E> T requestObject(String url, Class<T> resultClass, QueryPart<T> query, RequestProcessor<E> requestProcessor) {
         Response response = doRequest(url, query, requestProcessor);
-        if (response.getStatus() == HttpStatus.SC_OK) {
+        if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
             return response.readEntity(resultClass);
         } else if (response.getStatus() == HttpStatus.SC_NOT_FOUND) {
             buildAndLogServerError(response);
@@ -218,7 +218,7 @@ class HttpClient {
         String url = clientConfiguration.getDataUrl();
         Response response = doRequest(url, query, requestProcessor);
         Object entity = response.getEntity();
-        if (response.getStatus() == HttpStatus.SC_OK && entity instanceof InputStream) {
+        if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL) && entity instanceof InputStream) {
             return (InputStream) entity;
         } else {
             throw AtsdServerExceptionFactory.fromResponse(response);
@@ -237,7 +237,7 @@ class HttpClient {
 
     private boolean getUpdateResult(Response response) {
         try {
-            if (response.getStatus() == HttpStatus.SC_OK) {
+            if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
                 return true;
             } else if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 return false;
