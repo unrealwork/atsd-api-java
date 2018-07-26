@@ -22,18 +22,14 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.ParsePosition;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
+import java.util.*;
 
 @Slf4j
 @UtilityClass
@@ -187,6 +183,10 @@ public class AtsdUtil {
         }
 
         return BooleanUtils.toBoolean(value);
+    }
+
+    public static boolean hasStatusFamily(final Response response, final Response.Status.Family family) {
+        return response.getStatusInfo().getFamily().equals(family);
     }
 
 }

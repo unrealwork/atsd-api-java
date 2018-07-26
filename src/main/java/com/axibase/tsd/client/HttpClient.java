@@ -17,6 +17,7 @@ package com.axibase.tsd.client;
 import com.axibase.tsd.model.system.ClientConfiguration;
 import com.axibase.tsd.model.system.ServerError;
 import com.axibase.tsd.query.QueryPart;
+import com.axibase.tsd.util.AtsdUtil;
 import com.fasterxml.jackson.jaxrs.base.JsonMappingExceptionMapper;
 import com.fasterxml.jackson.jaxrs.base.JsonParseExceptionMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
@@ -193,7 +194,7 @@ class HttpClient {
 
     private <T, E> List<T> requestList(String url, Class<T> resultClass, QueryPart<T> query, RequestProcessor<E> requestProcessor) {
         Response response = doRequest(url, query, requestProcessor);
-        if (response.getStatus() == HttpStatus.SC_OK) {
+        if (AtsdUtil.hasStatusFamily(response, Response.Status.Family.SUCCESSFUL)) {
             return response.readEntity(listType(resultClass));
         } else if (response.getStatus() == HttpStatus.SC_NOT_FOUND) {
             return Collections.emptyList();
@@ -204,7 +205,7 @@ class HttpClient {
 
     private <T, E> T requestObject(String url, Class<T> resultClass, QueryPart<T> query, RequestProcessor<E> requestProcessor) {
         Response response = doRequest(url, query, requestProcessor);
-        if (response.getStatus() == HttpStatus.SC_OK) {
+        if (AtsdUtil.hasStatusFamily(response, Response.Status.Family.SUCCESSFUL)) {
             return response.readEntity(resultClass);
         } else if (response.getStatus() == HttpStatus.SC_NOT_FOUND) {
             buildAndLogServerError(response);
@@ -218,7 +219,7 @@ class HttpClient {
         String url = clientConfiguration.getDataUrl();
         Response response = doRequest(url, query, requestProcessor);
         Object entity = response.getEntity();
-        if (response.getStatus() == HttpStatus.SC_OK && entity instanceof InputStream) {
+        if (AtsdUtil.hasStatusFamily(response, Response.Status.Family.SUCCESSFUL) && entity instanceof InputStream) {
             return (InputStream) entity;
         } else {
             throw AtsdServerExceptionFactory.fromResponse(response);
@@ -237,7 +238,7 @@ class HttpClient {
 
     private boolean getUpdateResult(Response response) {
         try {
-            if (response.getStatus() == HttpStatus.SC_OK) {
+            if (AtsdUtil.hasStatusFamily(response, Response.Status.Family.SUCCESSFUL)) {
                 return true;
             } else if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 return false;
