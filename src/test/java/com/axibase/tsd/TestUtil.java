@@ -44,7 +44,7 @@ public class TestUtil {
     public static final String MIN_QUERIED_DATE_TIME = "1000-01-01T00:00:00.000Z";
     public static final String MAX_QUERIED_DATE_TIME = "9999-12-31T23:59:59.999Z";
 
-    public static final int WAIT_TIME = 1800;
+    public static final int WAIT_TIME = 3600;
 
     public static final int RERUN_COUNT = 3;
     public static final int MAX_PING_TRIES = 77;
