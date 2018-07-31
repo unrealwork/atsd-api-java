@@ -22,6 +22,7 @@ import com.fasterxml.jackson.jaxrs.base.JsonMappingExceptionMapper;
 import com.fasterxml.jackson.jaxrs.base.JsonParseExceptionMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -69,7 +70,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 @Slf4j
 class HttpClient {
-    private static final java.util.logging.Logger LEGACY_LOGGER = java.util.logging.Logger.getLogger(HttpClient.class.getName());
+    private static final java.util.logging.Logger LEGACY_LOGGER =
+            java.util.logging.Logger.getLogger(HttpClient.class.getName());
 
     static {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
@@ -90,11 +92,13 @@ class HttpClient {
     private static Client buildClient(ClientConfiguration clientConfiguration) {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig
+                .property(HttpHeaders.USER_AGENT, clientConfiguration.getUserAgent())
                 .register(JsonMappingExceptionMapper.class)
                 .register(JsonParseExceptionMapper.class)
                 .register(JacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class)
                 .register(RequestBodyLogger.class)
-                .register(HttpAuthenticationFeature.basic(clientConfiguration.getUsername(), clientConfiguration.getPassword()))
+                .register(HttpAuthenticationFeature.basic(clientConfiguration.getUsername(),
+                        clientConfiguration.getPassword()))
         ;
 
         if (clientConfiguration.isEnableBatchCompression()) {
@@ -122,7 +126,8 @@ class HttpClient {
         clientConfig.property(ApacheClientProperties.SSL_CONFIG, sslConfig);
     }
 
-    public static PoolingHttpClientConnectionManager createConnectionManager(ClientConfiguration clientConfiguration, SslConfigurator sslConfig) {
+    public static PoolingHttpClientConnectionManager createConnectionManager(ClientConfiguration clientConfiguration,
+                                                                             SslConfigurator sslConfig) {
         SSLContext sslContext = sslConfig.createSSLContext();
         X509HostnameVerifier hostnameVerifier;
         if (clientConfiguration.isIgnoreSSLErrors()) {
@@ -179,7 +184,8 @@ class HttpClient {
     }
 
     public <T> Response request(QueryPart<T> query, String data) {
-        return doRequest(clientConfiguration.getDataUrl(), query, RequestProcessor.post(data), MediaType.TEXT_PLAIN_TYPE);
+        return doRequest(clientConfiguration.getDataUrl(), query,
+                RequestProcessor.post(data), MediaType.TEXT_PLAIN_TYPE);
     }
 
     public <T, E> List<T> requestDataList(Class<T> clazz, QueryPart<T> query, RequestProcessor<E> requestProcessor) {
@@ -192,7 +198,8 @@ class HttpClient {
         return requestObject(url, clazz, query, requestProcessor);
     }
 
-    private <T, E> List<T> requestList(String url, Class<T> resultClass, QueryPart<T> query, RequestProcessor<E> requestProcessor) {
+    private <T, E> List<T> requestList(String url, Class<T> resultClass,
+                                       QueryPart<T> query, RequestProcessor<E> requestProcessor) {
         Response response = doRequest(url, query, requestProcessor);
         if (AtsdUtil.hasStatusFamily(response, Response.Status.Family.SUCCESSFUL)) {
             return response.readEntity(listType(resultClass));
@@ -203,7 +210,8 @@ class HttpClient {
         }
     }
 
-    private <T, E> T requestObject(String url, Class<T> resultClass, QueryPart<T> query, RequestProcessor<E> requestProcessor) {
+    private <T, E> T requestObject(String url, Class<T> resultClass, QueryPart<T> query,
+                                   RequestProcessor<E> requestProcessor) {
         Response response = doRequest(url, query, requestProcessor);
         if (AtsdUtil.hasStatusFamily(response, Response.Status.Family.SUCCESSFUL)) {
             return response.readEntity(resultClass);
@@ -266,9 +274,9 @@ class HttpClient {
         return doRequest(url, query, requestProcessor, APPLICATION_JSON_TYPE);
     }
 
-    private <T, E> Response doRequest(String url, QueryPart<T> query, RequestProcessor<E> requestProcessor, MediaType mediaType) {
+    private <T, E> Response doRequest(String url, QueryPart<T> query,
+                                      RequestProcessor<E> requestProcessor, MediaType mediaType) {
         WebTarget target = client.target(url);
-
         target = query.fill(target);
 
         log.debug("url = {}", target.getUri());
@@ -279,7 +287,8 @@ class HttpClient {
             if (requestProcessor == null) {
                 response = request.get();
             } else {
-                response = requestProcessor.process(request, mediaType, "command".equals(query.getPath()) && clientConfiguration.isEnableBatchCompression());
+                response = requestProcessor.process(request, mediaType,
+                        "command".equals(query.getPath()) && clientConfiguration.isEnableBatchCompression());
             }
         } catch (ProcessingException e) {
             throw new AtsdClientException("Error while processing the request", e);

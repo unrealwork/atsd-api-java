@@ -14,12 +14,18 @@
  */
 package com.axibase.tsd.model.system;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Contains client configuration parameters.
  */
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 public class ClientConfiguration {
     public static final int DEFAULT_TIMEOUT_MS = 1000;
     public static final long DEFAULT_PING_TIMEOUT_MS = 600000L;
@@ -34,19 +40,7 @@ public class ClientConfiguration {
     private long pingTimeoutMillis = DEFAULT_PING_TIMEOUT_MS;
     private boolean skipStreamingControl = false;
     private boolean enableBatchCompression = false;
-
-    /**
-     * @param metadataUrl full URL to Metadata ATSD API
-     * @param dataUrl     full URL to Data ATSD API
-     * @param username    user name to login
-     * @param password    password to login
-     */
-    public ClientConfiguration(String metadataUrl, String dataUrl, String username, String password) {
-        this.metadataUrl = metadataUrl;
-        this.dataUrl = dataUrl;
-        this.username = username;
-        this.password = password;
-    }
+    private String userAgent;
 
     /**
      * @param url      full URL to both Metadata and Data ATSD API
@@ -58,5 +52,70 @@ public class ClientConfiguration {
         this.dataUrl = url;
         this.username = username;
         this.password = password;
+    }
+
+    /**
+     * Create builder with unnecessary args.
+     *
+     * @param url      full URL to both Metadata and Data ATSD API
+     * @param username user name to login
+     * @param password password to login
+     * @return ClientConfigurationBuilder
+     */
+    public static ClientConfigurationBuilder builder(final String url, final String username, final String password) {
+        return new ClientConfigurationBuilder(url, username, password);
+    }
+
+    /**
+     * Custom builder
+     */
+    @ToString
+    public static final class ClientConfigurationBuilder {
+
+
+        private final ClientConfiguration instance;
+
+        ClientConfigurationBuilder(final String url, final String username, final String password) {
+            this.instance = new ClientConfiguration(url, username, password);
+        }
+
+        public ClientConfigurationBuilder connectTimeoutMillis(int connectTimeoutMillis) {
+            instance.connectTimeoutMillis = connectTimeoutMillis;
+            return this;
+        }
+
+        public ClientConfigurationBuilder readTimeoutMillis(int readTimeoutMillis) {
+            instance.readTimeoutMillis = readTimeoutMillis;
+            return this;
+        }
+
+        public ClientConfigurationBuilder ignoreSSLErrors(boolean ignoreSSLErrors) {
+            instance.ignoreSSLErrors = ignoreSSLErrors;
+            return this;
+        }
+
+        public ClientConfigurationBuilder pingTimeoutMillis(long pingTimeoutMillis) {
+            instance.pingTimeoutMillis = pingTimeoutMillis;
+            return this;
+        }
+
+        public ClientConfigurationBuilder skipStreamingControl(boolean skipStreamingControl) {
+            instance.skipStreamingControl = skipStreamingControl;
+            return this;
+        }
+
+        public ClientConfigurationBuilder enableBatchCompression(boolean enableBatchCompression) {
+            instance.enableBatchCompression = enableBatchCompression;
+            return this;
+        }
+
+        public ClientConfigurationBuilder userAgent(String userAgent) {
+            instance.userAgent = userAgent;
+            return this;
+        }
+
+        public ClientConfiguration build() {
+            return instance;
+        }
     }
 }
