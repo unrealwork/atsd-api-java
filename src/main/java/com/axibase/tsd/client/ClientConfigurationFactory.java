@@ -31,6 +31,7 @@ public class ClientConfigurationFactory {
     private static final String DEFAULT_CLIENT_PROPERTIES_FILE_NAME = "classpath:/client.properties";
     private static final String AXIBASE_TSD_API_DOMAIN = "axibase.tsd.api";
     private static final String DEFAULT_API_PATH = "/api/v1";
+    public static final String DEFAULT_USERNAME = "atsd-api-java";
 
     private String protocol;
     private String serverName;
@@ -45,6 +46,7 @@ public class ClientConfigurationFactory {
     private boolean ignoreSSLErrors;
     private boolean skipStreamingControl;
     private boolean enableGzipCompression;
+    private String userAgent;
 
     private ClientConfigurationFactory() {
     }
@@ -58,36 +60,18 @@ public class ClientConfigurationFactory {
         return createInstance(clientPropertiesFileName);
     }
 
-    public static ClientConfigurationFactory createInstance(String clientPropertiesFileName) {
-        Properties clientProperties = AtsdUtil.loadProperties(clientPropertiesFileName);
-        ClientConfigurationFactory configurationFactory = new ClientConfigurationFactory();
-        configurationFactory.serverName = AtsdUtil.getPropertyStringValue(
-                AXIBASE_TSD_API_DOMAIN + ".server.name", clientProperties, null);
-        configurationFactory.serverPort = AtsdUtil.getPropertyStringValue(
-                AXIBASE_TSD_API_DOMAIN + ".server.port", clientProperties, null);
-        configurationFactory.username = AtsdUtil.getPropertyStringValue(
-                AXIBASE_TSD_API_DOMAIN + ".username", clientProperties, null);
-        configurationFactory.password = AtsdUtil.getPropertyStringValue(
-                AXIBASE_TSD_API_DOMAIN + ".password", clientProperties, null);
-        configurationFactory.metadataPath = AtsdUtil.getPropertyStringValue(
-                AXIBASE_TSD_API_DOMAIN + ".metadata.path", clientProperties, DEFAULT_API_PATH);
-        configurationFactory.dataPath = AtsdUtil.getPropertyStringValue(
-                AXIBASE_TSD_API_DOMAIN + ".data.path", clientProperties, DEFAULT_API_PATH);
-        configurationFactory.protocol = AtsdUtil.getPropertyStringValue(
-                AXIBASE_TSD_API_DOMAIN + ".protocol", clientProperties, DEFAULT_PROTOCOL);
-        configurationFactory.connectTimeoutMillis = AtsdUtil.getPropertyIntValue(
-                AXIBASE_TSD_API_DOMAIN + ".connection.timeout", clientProperties, DEFAULT_CONNECT_TIMEOUT_MS);
-        configurationFactory.readTimeoutMillis = AtsdUtil.getPropertyIntValue(
-                AXIBASE_TSD_API_DOMAIN + ".read.timeout", clientProperties, DEFAULT_READ_TIMEOUT_MS);
-        configurationFactory.pingTimeoutMillis = AtsdUtil.getPropertyLongValue(
-                AXIBASE_TSD_API_DOMAIN + ".ping.timeout", clientProperties, DEFAULT_PING_TIMEOUT_MS);
-        configurationFactory.ignoreSSLErrors = AtsdUtil.getPropertyBoolValue(
-                AXIBASE_TSD_API_DOMAIN + ".ssl.errors.ignore", clientProperties, false);
-        configurationFactory.skipStreamingControl = AtsdUtil.getPropertyBoolValue(
-                AXIBASE_TSD_API_DOMAIN + ".streaming.control.skip", clientProperties, false);
-        configurationFactory.enableGzipCompression = AtsdUtil.getPropertyBoolValue(
-                AXIBASE_TSD_API_DOMAIN + ".compression.gzip.enable", clientProperties, false);
-        return configurationFactory;
+    public ClientConfigurationFactory(String protocol, String serverName, int serverPort,
+                                      String metadataPath, String dataPath, String username, String password,
+                                      int connectTimeoutMillis,
+                                      int readTimeoutMillis,
+                                      long pingTimeoutMillis,
+                                      boolean ignoreSSLErrors,
+                                      boolean skipStreamingControl,
+                                      boolean enableGzipCompression) {
+        this(protocol, serverName, Integer.toString(serverPort), metadataPath,
+                dataPath, username, password,
+                connectTimeoutMillis, readTimeoutMillis, pingTimeoutMillis,
+                ignoreSSLErrors, skipStreamingControl, enableGzipCompression);
     }
 
     public ClientConfigurationFactory(String protocol, String serverName, String serverPort,
@@ -113,30 +97,43 @@ public class ClientConfigurationFactory {
         this.enableGzipCompression = enableGzipCompression;
     }
 
-    public ClientConfigurationFactory(String protocol, String serverName, int serverPort,
-                                      String metadataPath, String dataPath, String username, String password,
-                                      int connectTimeoutMillis,
-                                      int readTimeoutMillis,
-                                      long pingTimeoutMillis,
-                                      boolean ignoreSSLErrors,
-                                      boolean skipStreamingControl,
-                                      boolean enableGzipCompression) {
-        this(protocol, serverName, Integer.toString(serverPort), metadataPath, dataPath, username, password,
-                connectTimeoutMillis, readTimeoutMillis, pingTimeoutMillis, ignoreSSLErrors, skipStreamingControl, enableGzipCompression);
+    public static ClientConfigurationFactory createInstance(String clientPropertiesFileName) {
+        Properties clientProperties = AtsdUtil.loadProperties(clientPropertiesFileName);
+        ClientConfigurationFactory configurationFactory = new ClientConfigurationFactory();
+        AtsdPropertyExtractor extractor = new AtsdPropertyExtractor(clientProperties);
+        configurationFactory.serverName = extractor.getAsString("server.name", null);
+        configurationFactory.serverPort = extractor.getAsString("server.port", null);
+        configurationFactory.username = extractor.getAsString("username", null);
+        configurationFactory.password = extractor.getAsString("password", null);
+        configurationFactory.metadataPath = extractor.getAsString("metadata.path", DEFAULT_API_PATH);
+        configurationFactory.dataPath = extractor.getAsString("data.path", DEFAULT_API_PATH);
+        configurationFactory.protocol = extractor.getAsString("protocol", DEFAULT_PROTOCOL);
+        configurationFactory.connectTimeoutMillis =
+                extractor.getAsInt("connection.timeout", DEFAULT_CONNECT_TIMEOUT_MS);
+        configurationFactory.readTimeoutMillis = extractor.getAsInt("read.timeout", DEFAULT_READ_TIMEOUT_MS);
+        configurationFactory.pingTimeoutMillis = extractor.getAsLong("ping.timeout", DEFAULT_PING_TIMEOUT_MS);
+        configurationFactory.ignoreSSLErrors = extractor.getAsBoolean("ssl.errors.ignore", false);
+        configurationFactory.skipStreamingControl = extractor.getAsBoolean("streaming.control.skip", false);
+        configurationFactory.enableGzipCompression = extractor.getAsBoolean("compression.gzip.enable", false);
+        configurationFactory.userAgent = extractor.getAsString("user.agent", DEFAULT_USERNAME);
+        return configurationFactory;
     }
 
+    /**
+     * Build client configuration from set properties.
+     *
+     * @return ClientConfiguration instance.
+     */
     public ClientConfiguration createClientConfiguration() {
-        ClientConfiguration clientConfiguration = new ClientConfiguration(buildMetaDataUrl(),
-                buildTimeSeriesUrl(),
-                username,
-                password);
-        clientConfiguration.setConnectTimeoutMillis(connectTimeoutMillis);
-        clientConfiguration.setReadTimeoutMillis(readTimeoutMillis);
-        clientConfiguration.setPingTimeoutMillis(pingTimeoutMillis);
-        clientConfiguration.setIgnoreSSLErrors(ignoreSSLErrors);
-        clientConfiguration.setSkipStreamingControl(skipStreamingControl);
-        clientConfiguration.setEnableBatchCompression(enableGzipCompression);
-        return clientConfiguration;
+        return ClientConfiguration.builder(buildTimeSeriesUrl(), username, password)
+                .connectTimeoutMillis(connectTimeoutMillis)
+                .readTimeoutMillis(readTimeoutMillis)
+                .pingTimeoutMillis(pingTimeoutMillis)
+                .ignoreSSLErrors(ignoreSSLErrors)
+                .skipStreamingControl(skipStreamingControl)
+                .enableBatchCompression(enableGzipCompression)
+                .userAgent(userAgent)
+                .build();
     }
 
     private String buildMetaDataUrl() {

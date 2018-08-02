@@ -29,7 +29,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.ParsePosition;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
 
 @Slf4j
 @UtilityClass
@@ -92,6 +97,16 @@ public class AtsdUtil {
 
     public static void checkMetricIsEmpty(String metricName) {
         check(metricName, "Metric name is empty");
+    }
+
+    /**
+     * Get version of client from Manifest.MF file
+     *
+     * @return current client version or null if it's not specified.
+     */
+    public static String getVersion() {
+        return AtsdUtil.class
+                .getPackage().getImplementationVersion();
     }
 
     @UtilityClass

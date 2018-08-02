@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * All available USER and API permission roles.
  *
  * @see <a href="https://axibase.com/docs/atsd/administration/user-authorization.html#api-roles">API Roles</a>
- * @see <a href="https://axibase.com/docs/atsd/administration/user-authorization.html##user-interface-roles">
+ * @see <a href="https://axibase.com/docs/atsd/administration/user-authorization.html#user-interface-roles">
  * UI roles</a>
  */
 public enum Role {
