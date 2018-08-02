@@ -15,6 +15,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.apache.commons.lang3.ArrayUtils.toArray;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
@@ -32,12 +33,12 @@ public class HttpUtilsTest {
     @Parameters(name = "Compiling of UserAgent header for version {0} and client name {1} should return {2}")
     public static Collection<Object[]> params() {
         return Arrays.asList(
-                new Object[][] {
-                        {"axibase-collector/19768", "1.0.6", "axibase-collector/19768 atsd-api-java/1.0.6"},
-                        {null, "1.0.6", "atsd-api-java/1.0.6"},
-                        {"axibase-collector/19768", null, "axibase-collector/19768 atsd-api-java"},
-                        {null, null, "atsd-api-java"}
-                }
+                toArray(
+                        testCase("axibase-collector/19768", "1.0.6", "axibase-collector/19768 atsd-api-java/1.0.6"),
+                        testCase(null, "1.0.6", "atsd-api-java/1.0.6"),
+                        testCase("axibase-collector/19768", null, "axibase-collector/19768 atsd-api-java"),
+                        testCase(null, null, "atsd-api-java")
+                )
         );
     }
 
@@ -53,5 +54,9 @@ public class HttpUtilsTest {
         final String assertMessage = String.format("Incorrect compiled user-agent name for version: %s and client name: %s",
                 version, clientName);
         assertEquals(assertMessage, expectedUserAgent, HttpUtils.compileUserAgent(clientName));
+    }
+
+    private static Object[] testCase(Object... params) {
+        return toArray(params);
     }
 }
