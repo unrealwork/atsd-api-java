@@ -92,7 +92,7 @@ class HttpClient {
     private static Client buildClient(ClientConfiguration clientConfiguration) {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig
-                .property(HttpHeaders.USER_AGENT, clientConfiguration.getUserAgent())
+                .property(HttpHeaders.USER_AGENT, HttpUtils.compileUserAgent(clientConfiguration.getClientName()))
                 .register(JsonMappingExceptionMapper.class)
                 .register(JsonParseExceptionMapper.class)
                 .register(JacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class)

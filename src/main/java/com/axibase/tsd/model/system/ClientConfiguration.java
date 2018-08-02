@@ -40,7 +40,7 @@ public class ClientConfiguration {
     private long pingTimeoutMillis = DEFAULT_PING_TIMEOUT_MS;
     private boolean skipStreamingControl = false;
     private boolean enableBatchCompression = false;
-    private String userAgent;
+    private String clientName;
 
     /**
      * @param url      full URL to both Metadata and Data ATSD API
@@ -71,8 +71,6 @@ public class ClientConfiguration {
      */
     @ToString
     public static final class ClientConfigurationBuilder {
-
-
         private final ClientConfiguration instance;
 
         ClientConfigurationBuilder(final String url, final String username, final String password) {
@@ -110,7 +108,7 @@ public class ClientConfiguration {
         }
 
         public ClientConfigurationBuilder userAgent(String userAgent) {
-            instance.userAgent = userAgent;
+            instance.clientName = userAgent;
             return this;
         }
 

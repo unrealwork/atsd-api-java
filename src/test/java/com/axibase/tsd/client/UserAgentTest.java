@@ -15,7 +15,7 @@ public class UserAgentTest {
 
     @Test
     public void testUserAgent() {
-        final String actual = client.getClientConfiguration().getUserAgent();
+        final String actual = client.getClientConfiguration().getClientName();
         final String message = "User-agent value is different from default";
         Assert.assertEquals(message, "atsd-api-java", actual);
     }
