@@ -31,7 +31,6 @@ public class ClientConfigurationFactory {
     private static final String DEFAULT_CLIENT_PROPERTIES_FILE_NAME = "classpath:/client.properties";
     private static final String AXIBASE_TSD_API_DOMAIN = "axibase.tsd.api";
     private static final String DEFAULT_API_PATH = "/api/v1";
-    public static final String DEFAULT_USERNAME = "atsd-api-java";
 
     private String protocol;
     private String serverName;
@@ -115,7 +114,7 @@ public class ClientConfigurationFactory {
         configurationFactory.ignoreSSLErrors = extractor.getAsBoolean("ssl.errors.ignore", false);
         configurationFactory.skipStreamingControl = extractor.getAsBoolean("streaming.control.skip", false);
         configurationFactory.enableGzipCompression = extractor.getAsBoolean("compression.gzip.enable", false);
-        configurationFactory.userAgent = extractor.getAsString("user.agent", DEFAULT_USERNAME);
+        configurationFactory.userAgent = extractor.getAsString("user.agent", StringUtils.EMPTY);
         return configurationFactory;
     }
 
