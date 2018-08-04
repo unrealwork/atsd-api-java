@@ -15,7 +15,7 @@ Get started by importing the client with **Maven**:
     <dependency>
       <groupId>com.axibase</groupId>
       <artifactId>atsd-api-java</artifactId>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
     </dependency>
 ```
 
@@ -78,7 +78,7 @@ git clone https://github.com/axibase/atsd-api-java.git
 cd atsd-api-java
 mvn clean dependency:copy-dependencies compile jar:jar
 cd target
-java -cp "atsd-api-java-1.0.6.jar:dependency/*" -Daxibase.tsd.api.client.properties=./client.properties com.axibase.tsd.example.AtsdClientWriteExample
+java -cp "atsd-api-java-1.0.7.jar:dependency/*" -Daxibase.tsd.api.client.properties=./client.properties com.axibase.tsd.example.AtsdClientWriteExample
 ```
 
 ## Examples

@@ -92,7 +92,6 @@ class HttpClient {
     private static Client buildClient(ClientConfiguration clientConfiguration) {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig
-                .property(HttpHeaders.USER_AGENT, HttpUtils.compileUserAgent(clientConfiguration.getClientName()))
                 .register(JsonMappingExceptionMapper.class)
                 .register(JsonParseExceptionMapper.class)
                 .register(JacksonJaxbJsonProvider.class, MessageBodyReader.class, MessageBodyWriter.class)
@@ -280,7 +279,8 @@ class HttpClient {
         target = query.fill(target);
 
         log.debug("url = {}", target.getUri());
-        Invocation.Builder request = target.request(mediaType);
+        Invocation.Builder request = target.request(mediaType)
+                .header(HttpHeaders.USER_AGENT, HttpUtils.compileUserAgent(clientConfiguration.getClientName()));
 
         Response response = null;
         try {

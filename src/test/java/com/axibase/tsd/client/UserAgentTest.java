@@ -1,6 +1,7 @@
 package com.axibase.tsd.client;
 
 import com.axibase.tsd.TestUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,6 @@ public class UserAgentTest {
     public void testUserAgent() {
         final String actual = client.getClientConfiguration().getClientName();
         final String message = "User-agent value is different from default";
-        Assert.assertEquals(message, "atsd-api-java", actual);
+        Assert.assertEquals(message, StringUtils.EMPTY, actual);
     }
 }
