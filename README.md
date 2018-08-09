@@ -138,6 +138,7 @@ Use pure Java:
                 600000, // pingTimeout
                 false, // ignoreSSLErrors
                 false // skipStreamingControl
+                false // enableGzipCompression
         );
         ClientConfiguration clientConfiguration = configurationFactory
             .createClientConfiguration();
