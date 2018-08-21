@@ -1,77 +1,146 @@
-# Axibase Time Series Database Client for Java
+# ATSD Java Client
+
+![](./images/axibase-and-java.png)
 
 [![Travis](https://api.travis-ci.org/axibase/atsd-api-java.svg)](https://travis-ci.org/axibase/atsd-api-java)
 [![Codebeat](https://codebeat.co/badges/0d0339b4-9155-4484-8dc6-9bfdf8cc4d09)](https://codebeat.co/projects/github-com-axibase-atsd-api-java)
 [![codecov](https://codecov.io/gh/axibase/atsd-api-java/branch/master/graph/badge.svg)](https://codecov.io/gh/axibase/atsd-api-java)
 [![Maven central](https://maven-badges.herokuapp.com/maven-central/com.axibase/atsd-api-java/badge.svg)](https://mvnrepository.com/artifact/com.axibase/atsd-api-java/)
 
+## Table of Contents
 
-The **ATSD Client for Java** enables Java developers to build reporting, analytical, and alerting applications that read and write data and metadata from the
-[Axibase Time Series Database][atsd].
+* [Overview](#overview)
+* [Implemented Methods](#request-methods)
+* [Installing Java Client](#installing-java-client)
+* [Examples](#examples)
+* [Metadata Processing](#metadata-processing)
+* [Data Queries](#data-queries)
 
-Get started by importing the client with **Maven**:
+## Overview
+
+**ATSD Java Client** enables Java developers to build reporting, analytical, and alerting applications that can read and write data and metadata from
+[Axibase Time Series Database](https://axibase.com/docs/atsd/).
+
+Get started by importing the Java Client with **Maven**:
 
 ```xml
-    <dependency>
-      <groupId>com.axibase</groupId>
-      <artifactId>atsd-api-java</artifactId>
-      <version>1.0.7</version>
-    </dependency>
+<dependency>
+  <groupId>com.axibase</groupId>
+  <artifactId>atsd-api-java</artifactId>
+  <version>1.0.7</version>
+</dependency>
 ```
-
-* [Documentation][atsd-api]
-* [Issues][atsd-issues]
 
 ## Implemented Methods
 
 The **ATSD Client for Java** provides an easy-to-use client for interfacing with **ATSD** metadata and data REST API services.
 It has the ability to read and write time series values, statistics, properties, alerts, and messages.
 
-* Data API
-  * Series
-    * QUERY
-    * INSERT
-    * CSV INSERT
-  * Properties
-    * QUERY
-    * INSERT
-  * Alerts
-    * QUERY
-  * Alerts History
-    * QUERY
+### [REST API](https://axibase.com/docs/atsd/api/data/)
 
-* Metadata API
-  * Metrics
-    * Get Metrics
-    * Get Metric
-    * Create/Update Metric
-    * Delete Metric  
-    * Get Entities and Series Tags for Metric
-  * Entities
-    * Get Entities
-    * Get Entity
-    * Create/Update Entity
-    * Delete Entity
-    * Get Metrics for Entity
-  * Entity Groups
-    * Get Entity Groups
-    * Get Entity Group
-    * Create/Update Entity Group
-    * Delete Entity Group
-    * Entities for Entity Group
-    * Add Entities to Entity Group
-    * Set (Replace) Entities in Entity Group
-    * Delete Entities from Entity Group
+The REST API allows you to insert and retrieve data from the database using HTTP requests.
 
-## Getting Started
+#### Series
 
-Before you begin installing the **ATSD Client for Java**, you need to install a copy of the [Axibase Time Series Database][atsd].
-Download the latest version of ATSD that is available for your Linux distribution.
+* [Series: `query`](https://axibase.com/docs/atsd/api/data/series/query.html)<br>
+  Retrieves time series objects for the specified metric, entity, tags, and date range. Applies common time series transformations including aggregation, interpolation, downsampling etc.
 
-Minimum requirements for running the ATSD Client: Java 1.7+.
+* [Series: `insert`](https://axibase.com/docs/atsd/api/data/series/insert.html)<br>
+  Inserts a timestamped array of numbers for a given series identified by metric, entity, and series tags.
 
-We recommend installing the ATSD Client for Java by using Maven. Build the ATSD Client with
-Maven after checking out the code from GitHub.
+* [Series: `insert CSV`](https://axibase.com/docs/atsd/api/data/series/csv-insert.html)<br>
+  Inserts series values for the specified entity and series tags in CSV format.
+
+#### Properties
+
+* [Properties: `query`](https://axibase.com/docs/atsd/api/data/properties/query.html)<br>
+  Retrieves property records for the specified filters including type, entity, key, and time range.
+
+* [Properties: `insert`](https://axibase.com/docs/atsd/api/data/properties/insert.html)<br>
+  Inserts an array of properties.
+
+#### Alerts
+
+* [Alerts: `query`](https://axibase.com/docs/atsd/api/data/alerts/query.html)<br>
+  Retrieves open alerts for specified filters.
+
+* [Alerts: `history query`](https://axibase.com/docs/atsd/api/data/alerts/history-query.html)<br>
+  Retrieves a list of closed alerts matching specified fields.
+
+### [Meta API](https://axibase.com/docs/atsd/api/meta/)
+
+The Meta API allows you to query metadata for metrics, entities, and entity groups in the database.
+
+#### Metrics
+
+* [Metric: `get`](https://axibase.com/docs/atsd/api/meta/metric/get.html)<br>
+  Retrieves properties and tags for the specified metric.
+
+* [Metric: `update`](https://axibase.com/docs/atsd/api/meta/metric/update.html)<br>
+  Updates fields and tags of the specified metric.
+
+* [Metric: `create or replace`](https://axibase.com/docs/atsd/api/meta/metric/create-or-replace.html)<br>
+  Creates a metric with specified fields and tags or replaces the fields and tags of an existing metric.
+
+* [Metric: `delete`](https://axibase.com/docs/atsd/api/meta/metric/delete.html)<br>
+  Deletes the specified metric.
+
+* [Metric: `series tags`](https://axibase.com/docs/atsd/api/meta/metric/series-tags.html)<br>
+  Retrieves unique series tags values for the specified metric.
+
+#### Entities
+
+* [Entity: `get`](https://axibase.com/docs/atsd/api/meta/entity/get.html)<br>
+  Retrieves fields and tags describing the specified entity.
+
+* [Entity: `update`](https://axibase.com/docs/atsd/api/meta/entity/update.html)<br>
+  Updates fields and tags of the specified entity.
+
+* [Entity: `create or replace`](https://axibase.com/docs/atsd/api/meta/entity/create-or-replace.html)<br>
+  Creates an entity with specified fields and tags or replaces the fields and tags of an existing entity.
+
+* [Entity: `delete`](https://axibase.com/docs/atsd/api/meta/entity/delete.html)<br>
+  Deletes the specified entity and removes the entity from any entity groups it belongs to.
+
+* [Entity: `metrics`](https://axibase.com/docs/atsd/api/meta/entity/metrics.html)<br>
+  Retrieves a list of metrics collected by the entity.
+  
+#### Entity Groups
+
+* [Entity Group: `get`](https://axibase.com/docs/atsd/api/meta/entity-group/get.html)<br>
+  Retrieves information about the specified entity group including its name and user-defined tags.
+
+* [Entity Group: `update`](https://axibase.com/docs/atsd/api/meta/entity-group/update.html)<br>
+  Updates fields and tags of the specified entity group.
+
+* [Entity Group: `create or replace`](https://axibase.com/docs/atsd/api/meta/entity-group/create-or-replace.html)<br>
+  Creates an entity group with specified fields and tags or replaces the fields and tags of an existing entity group.
+
+* [Entity Group: `delete`](https://axibase.com/docs/atsd/api/meta/entity-group/delete.html)<br>
+  Deletes the specified entity group.
+
+* [Entity Group: `get entities`](https://axibase.com/docs/atsd/api/meta/entity-group/get-entities.html)<br>
+  Retrieves a list of entities that are members of the specified entity group and are matching the specified filter conditions.
+
+* [Entity Group: `add entities`](https://axibase.com/docs/atsd/api/meta/entity-group/get-entities.html)<br>
+  Retrieves a list of entities that are members of the specified entity group and are matching the specified filter conditions.
+
+* [Entity Group: `set entities`](https://axibase.com/docs/atsd/api/meta/entity-group/set-entities.html)<br>
+  Sets members of the entity group from the specified entity list.
+
+* [Entity Group: `delete entities`](https://axibase.com/docs/atsd/api/meta/entity-group/delete-entities.html)<br>
+  Removes the specified members from the entity group.
+
+---
+
+## Installing Java Client
+
+**Prerequisites**:
+
+* [Install ATSD](https://axibase.com/docs/atsd/installation/)
+* Java `1.7+`
+
+Installing **ATSD Java Client** via Maven is recommended. Build the **ATSD Java Client** with Maven after cloning the GitHub code.
 
 ```sh
 git clone https://github.com/axibase/atsd-api-java.git
@@ -83,16 +152,12 @@ java -cp "atsd-api-java-1.0.7.jar:dependency/*" -Daxibase.tsd.api.client.propert
 
 ## Examples
 
-See:
+* [`AtsdClientReadExample`](https://github.com/axibase/atsd-api-java/blob/master/src/main/java/com/axibase/tsd/example/AtsdClientReadExample.java)
+* [`AtsdClientWriteExample`](https://github.com/axibase/atsd-api-java/blob/master/src/main/java/com/axibase/tsd/example/AtsdClientWriteExample.java)
 
-* [AtsdClientReadExample][atsd-read-example]
-* [AtsdClientWriteExample][atsd-write-example]
+## Client Configuration
 
-### Client Configuration
-
-#### Option 1
-
-Use `-Daxibase.tsd.api.client.properties=./client.properties`:
+### `-Daxibase.tsd.api.client.properties=./client.properties`:
 
 ```java
         ClientConfiguration clientConfiguration = ClientConfigurationFactory
@@ -103,7 +168,7 @@ Use `-Daxibase.tsd.api.client.properties=./client.properties`:
         MetaDataService metaDataService = new MetaDataService(httpClientManager);
 ```
 
-**client.properties** example:
+**`client.properties`** example:
 
 ```properties
     axibase.tsd.api.server.name=atsd_server
@@ -124,9 +189,7 @@ Usage:
     atsdClientWriteExample.printData();
 ```
 
-#### Option 2
-
-Use pure Java:
+### Pure Java
 
 ```java
         ClientConfigurationFactory configurationFactory = new ClientConfigurationFactory(
@@ -165,10 +228,9 @@ Usage:
         atsdClientWriteExample.printData();
 ```
 
-#### Option 3
+### Spring
 
-Use Spring.
-See **example-beans.xml**:
+See **`example-beans.xml`**:
 
 ```xml
         <bean id="example" class="com.axibase.tsd.example.AtsdClientWriteExample"/>
@@ -244,10 +306,3 @@ Usage:
             }
         }
 ```
-
-[atsd]:https://axibase.com/products/axibase-time-series-database/
-[atsd-api]:https://github.com/axibase/atsd-docs/blob/master/api/README.md
-[atsd-zip]:https://github.com/axibase/atsd-api-java/releases/download/v.0.5.15/atsd-api-java-0.5.15-bin.zip
-[atsd-issues]:https://axibase.com/customer-support/
-[atsd-read-example]:https://github.com/axibase/atsd-api-java/blob/master/src/main/java/com/axibase/tsd/example/AtsdClientReadExample.java
-[atsd-write-example]:https://github.com/axibase/atsd-api-java/blob/master/src/main/java/com/axibase/tsd/example/AtsdClientWriteExample.java
