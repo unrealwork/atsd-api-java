@@ -18,6 +18,7 @@ import com.axibase.tsd.model.data.series.Interpolate;
 import com.axibase.tsd.model.data.series.Interval;
 import com.axibase.tsd.model.data.series.aggregate.AggregateType;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SimpleAggregateMatcher {
     private List<AggregateType> types;
+    @JsonProperty("period")
     private Interval interval;
     private Interpolate interpolate;
 
@@ -38,7 +40,7 @@ public class SimpleAggregateMatcher {
     protected void init(Interval interval, Interpolate interpolate, AggregateType type, AggregateType... types) {
         this.interval = interval;
         this.interpolate = interpolate;
-        this.types = new ArrayList<AggregateType>();
+        this.types = new ArrayList<>();
         this.types.add(type);
         this.types.addAll(Arrays.asList(types));
     }

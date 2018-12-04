@@ -577,4 +577,37 @@ public class SeriesTest extends BaseDataTest {
         assertNull(sample.getTextValue());
     }
 
+
+    @Test
+    public void testAggregation() throws InterruptedException {
+        final String entityName = buildVariablePrefix() + "entity";
+        final String metricName = buildVariablePrefix() + "metric";
+        final Long timestamp = MOCK_TIMESTAMP;
+        AddSeriesCommand addSeriesCommand = new AddSeriesCommand(entityName, metricName);
+        addSeriesCommand
+                .addSeries(new Sample(timestamp, MOCK_SERIE_NUMERIC_VALUE, MOCK_SERIE_TEXT_VALUE));
+        assertTrue(dataService.addSeries(addSeriesCommand));
+        Thread.sleep(WAIT_TIME);
+
+        GetSeriesQuery getSeriesQuery = new GetSeriesQuery(entityName, metricName)
+                .setTimeFormat(TimeFormat.ISO)
+                .setAggregateMatcher(new SimpleAggregateMatcher(
+                        new Interval(1, IntervalUnit.MINUTE),
+                        null,
+                        AggregateType.AVG
+                ))
+                .setStartTime(0L)
+                .setEndTime(timestamp + MOCK_TIMESTAMP_DELTA);
+
+        List getSeriesResults = dataService.retrieveSeries(getSeriesQuery);
+        assertFalse(getSeriesResults.isEmpty());
+        assertTrue(getSeriesResults.get(0) instanceof Series);
+
+        List<Sample> sampleList = ((Series) getSeriesResults.get(0)).getData();
+        assertFalse(sampleList.isEmpty());
+
+        Sample s = sampleList.get(0);
+        assertTrue(StringUtils.isNoneBlank(s.getIsoDate()));
+        assertEquals(MOCK_SERIE_NUMERIC_VALUE, s.getNumericValueAsDouble(), 0);
+    }
 }
