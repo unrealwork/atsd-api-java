@@ -35,6 +35,7 @@ function start_container {
            -e axiname=${atsd_login} \
            -e axipass=${atsd_password} \
            -e timezone=${default_timezone} \
+           -e DEPLOYMENT_TYPE=java-client-test \
            axibase/atsd:api_test
     # Wait while container is not starting up
     printf "Waiting to start ${name} container ...";
